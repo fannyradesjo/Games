@@ -146,6 +146,8 @@ public class Player {
             return new GameState(gameState, new Move());
         }
 
+        int v = minmax(gameState, 3, 1);
+
         /**
          * Here you should write your algorithms to get the best next move, i.e.
          * the best next state. This skeleton returns a random move instead.
