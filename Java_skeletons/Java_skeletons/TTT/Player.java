@@ -26,35 +26,61 @@ public class Player {
          for(int col = 0; col < size; col++){
            cell = state.at(row,col);
            if(cell == player){
+             if(score[row] == null){ score[row] = 1;}
+               else{
              if(score[row] > 0){score[row]++;}
              if(score[row] < 0){score[row] = 0;}
+           }
+           if(score[size+col] == null){ score[size+col] = 1;}
+             else{
              if(score[size+col] > 0){score[size+col]++;}
              if(score[size+col] < 0){score[size+col] = 0;}
+           }
              if(row == col){
-               if(score[2*size] > 0){score[2*size]++;}
-               if(score[2*size] < 0){score[2*size] = 0;}
+               if(score[2*size] == null){ score[2*size] = 1;}
+                 else{
+                   if(score[2*size] > 0){score[2*size]++;}
+                   if(score[2*size] < 0){score[2*size] = 0;}
+                 }
              }
              if(row+col == size-1){
-               if(score[2*size+1] > 0){score[2*size+1]++;}
-               if(score[2*size+1] < 0){score[2*size+1] = 0;}
+               if(score[2*size+1] == null){ score[2*size+1] = 1;}
+                 else{
+                   if(score[2*size+1] > 0){score[2*size+1]++;}
+                   if(score[2*size+1] < 0){score[2*size+1] = 0;}
+                 }
              }
            }
+
            if(cell == opponent){
-             if(score[row] < 0){score[row]++;}
+             if(score[row] == null){ score[row] = -1;}
+               else{
+             if(score[row] < 0){score[row]--;}
              if(score[row] > 0){score[row] = 0;}
-             if(score[size+col] < 0){score[size+col]++;}
+           }
+           if(score[size+col] == null){ score[size+col] = -1;}
+             else{
+             if(score[size+col] < 0){score[size+col]--;}
              if(score[size+col] > 0){score[size+col] = 0;}
+           }
              if(row == col){
-               if(score[2*size] < 0){score[2*size]++;}
-               if(score[2*size] > 0){score[2*size] = 0;}
+               if(score[2*size] == null){ score[2*size] = -1;}
+                 else{
+                   if(score[2*size] < 0){score[2*size]--;}
+                   if(score[2*size] > 0){score[2*size] = 0;}
+                 }
              }
              if(row+col == size-1){
-               if(score[2*size+1] < 0){score[2*size+1]++;}
-               if(score[2*size+1] > 0){score[2*size+1] = 0;}
+               if(score[2*size+1] == null){ score[2*size+1] = -1;}
+                 else{
+                   if(score[2*size+1] < 0){score[2*size+1]--;}
+                   if(score[2*size+1] > 0){score[2*size+1] = 0;}
+                 }
+             }
              }
            }
          }
-       }
+
 
        for(int i = 0; i < 2*size+2; i++){
          if(score[i] != null){
