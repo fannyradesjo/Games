@@ -93,6 +93,38 @@ public class Player {
        return 0; // sattes dit för att få datorn att sluta klaga
      }
 
+     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
+       int v;
+
+       Vector<GameState> possibleStates = new Vector<GameState>();
+       state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
+
+       if(depth == 0 || possibleStates.size() == 0) {
+         v = evaluate(player, state);
+       }
+       else if(player == 1) {
+         v = -Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           v = java.lang.Math.max(v, alphabeta(s,depth-1,alpha,beta,2));
+           alpha = java.lang.Math.max(alpha, v);
+           if(beta <= alpha){
+             break;
+           }
+         }
+       }
+       else {
+         v = Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           v = java.lang.Math.min(v, alphabeta(s, depth-1, alpha,beta,1));
+           beta = java.lang.Math.min(beta, v);
+           if(beta <= alpha){
+             break;
+           }
+         }
+       }
+       return v;
+     }
+
     public GameState play(final GameState gameState, final Deadline deadline) {
         Vector<GameState> nextStates = new Vector<GameState>();
         gameState.findPossibleMoves(nextStates);
