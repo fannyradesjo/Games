@@ -2,6 +2,8 @@ import java.util.*;
 import java.lang.*;
 
 public class Player {
+  public static GameState nextBestState;
+
     /**
      * Performs a move
      *
@@ -63,34 +65,44 @@ public class Player {
        return score_sum;
      }
 
-     public static int minmax(GameState state, int player){
+     public static int minmax(GameState state, int depth, int player){
        int bestPossible;
+       GameState maxState = new GameState();
 
        Vector<GameState> possibleStates = new Vector<GameState>();
        state.findPossibleMoves(possibleStates);
 
-       if(possibleStates.size() == 0){
+       if(possibleStates.size() == 0 || depth == 0){
          return evaluate(player, state);
        }
 
        if(player == 1){
          bestPossible = -Integer.MAX_VALUE;
          for(GameState s: possibleStates){
-           int v = minmax(s, 2);
-           bestPossible = java.lang.Math.max(bestPossible, v);
-           return bestPossible;
+           int v = minmax(s,depth-1, 2);
+           //bestPossible = java.lang.Math.max(bestPossible, v);
+           if (v>=bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+          }
          }
+         nextBestState = maxState;
+         return bestPossible;
        }
 
        else{
          bestPossible = Integer.MAX_VALUE;
          for(GameState s: possibleStates){
-           int v = minmax(s, 1);
-           bestPossible = java.lang.Math.min(bestPossible, v);
-           return bestPossible;
+           int v = minmax(s,depth-1, 1);
+           //bestPossible = java.lang.Math.min(bestPossible, v);
+           if (v<bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+          }
          }
+         nextBestState = maxState;
+         return bestPossible;
        }
-       return 0; // sattes dit för att få datorn att sluta klaga
      }
 
      public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
@@ -138,7 +150,8 @@ public class Player {
          * Here you should write your algorithms to get the best next move, i.e.
          * the best next state. This skeleton returns a random move instead.
          */
-        Random random = new Random();
-        return nextStates.elementAt(random.nextInt(nextStates.size()));
+        //Random random = new Random();
+        //return nextStates.elementAt(random.nextInt(nextStates.size()));
+        return nextBestState;
     }
 }
