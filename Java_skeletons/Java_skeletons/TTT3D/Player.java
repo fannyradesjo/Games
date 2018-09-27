@@ -101,6 +101,8 @@ public class Player {
 
      public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
        int v;
+       int bestPossible;
+       GameState maxState = new GameState();
 
        Vector<GameState> possibleStates = new Vector<GameState>();
        state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
@@ -109,26 +111,35 @@ public class Player {
          v = evaluate(player, state);
        }
        else if(player == 1) {
-         v = -Integer.MAX_VALUE;
+         bestPossible = -Integer.MAX_VALUE;
          for(GameState s: possibleStates){
            v = java.lang.Math.max(v, alphabeta(s,depth-1,alpha,beta,2));
            alpha = java.lang.Math.max(alpha, v);
+           if(v > bestPossible){
+             bestPossible = v;
+             maxState  = s;
+           }
            if(beta <= alpha){
              break;
            }
          }
        }
        else {
-         v = Integer.MAX_VALUE;
+         bestPossible = Integer.MAX_VALUE;
          for(GameState s: possibleStates){
            v = java.lang.Math.min(v, alphabeta(s, depth-1, alpha,beta,1));
            beta = java.lang.Math.min(beta, v);
+           if (v < bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+            }
            if(beta <= alpha){
              break;
            }
          }
        }
-       return v;
+       nextBestState = maxState;
+       return bestPossible;
      }
 
 
@@ -151,7 +162,7 @@ public class Player {
             return new GameState(gameState, new Move());
         }
 
-        int v = minmax(gameState, depth, 1);
+        int v = alphabeta(gameState, depth, 1);
 
         /**
          * Here you should write your algorithms to get the best next move, i.e.
