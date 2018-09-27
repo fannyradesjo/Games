@@ -84,7 +84,7 @@ public class Player {
 
        for(int i = 0; i < 2*size+2; i++){
          if(score[i] != null){
-           score_sum++;
+           score_sum = score_sum + score[i];
          }
        }
 
