@@ -1,6 +1,8 @@
 import java.util.*;
+import java.lang.*;
 
 public class Player {
+    public static GameState nextBestState;
 
 
   public static Integer fixEval(Integer score_val, int cell_val, int player){
@@ -56,6 +58,79 @@ public class Player {
     }
     return score_sum;
   }
+
+  public static int minmax(GameState state, int depth, int player){
+       int bestPossible;
+       GameState maxState = new GameState();
+
+       Vector<GameState> possibleStates = new Vector<GameState>();
+       state.findPossibleMoves(possibleStates);
+
+       if(possibleStates.size() == 0 || depth == 0){
+         return evaluate(player, state);
+       }
+
+       if(player == 1){
+         bestPossible = -Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           int v = minmax(s,depth-1, 2);
+           //bestPossible = java.lang.Math.max(bestPossible, v);
+           if (v>=bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+          }
+         }
+         nextBestState = maxState;
+         return bestPossible;
+       }
+
+       else{
+         bestPossible = Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           int v = minmax(s,depth-1, 1);
+           //bestPossible = java.lang.Math.min(bestPossible, v);
+           if (v<bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+          }
+         }
+         nextBestState = maxState;
+         return bestPossible;
+       }
+     }
+
+     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
+       int v;
+
+       Vector<GameState> possibleStates = new Vector<GameState>();
+       state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
+
+       if(depth == 0 || possibleStates.size() == 0) {
+         v = evaluate(player, state);
+       }
+       else if(player == 1) {
+         v = -Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           v = java.lang.Math.max(v, alphabeta(s,depth-1,alpha,beta,2));
+           alpha = java.lang.Math.max(alpha, v);
+           if(beta <= alpha){
+             break;
+           }
+         }
+       }
+       else {
+         v = Integer.MAX_VALUE;
+         for(GameState s: possibleStates){
+           v = java.lang.Math.min(v, alphabeta(s, depth-1, alpha,beta,1));
+           beta = java.lang.Math.min(beta, v);
+           if(beta <= alpha){
+             break;
+           }
+         }
+       }
+       return v;
+     }
+
 
     /**
      * Performs a move
