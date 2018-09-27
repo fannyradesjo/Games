@@ -142,6 +142,7 @@ public class Player {
      * @return the next state the board is in after our move
      */
     public GameState play(final GameState gameState, final Deadline deadline) {
+      int depth = 3;
         Vector<GameState> nextStates = new Vector<GameState>();
         gameState.findPossibleMoves(nextStates);
 
@@ -150,11 +151,14 @@ public class Player {
             return new GameState(gameState, new Move());
         }
 
+        int v = minmax(gameState, depth, 1);
+
         /**
          * Here you should write your algorithms to get the best next move, i.e.
          * the best next state. This skeleton returns a random move instead.
          */
-        Random random = new Random();
-        return nextStates.elementAt(random.nextInt(nextStates.size()));
+        //Random random = new Random();
+        //return nextStates.elementAt(random.nextInt(nextStates.size()));
+        return nextBestState;
     }
 }
