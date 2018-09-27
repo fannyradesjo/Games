@@ -104,7 +104,8 @@ public class Player {
        int bestPossible;
        GameState maxState = new GameState();
 
-       if(deadline.timeUntil() < 1000){
+       if(deadline.timeUntil() < 100000000){
+         System.err.println("dedaline!!!!!!");
          break;
        }
 
