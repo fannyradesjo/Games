@@ -99,10 +99,14 @@ public class Player {
        }
      }
 
-     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
+     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player, Deadline deadline){
        int v;
        int bestPossible;
        GameState maxState = new GameState();
+
+       if(deadline.timeUntil() < 1000){
+         break;
+       }
 
        Vector<GameState> possibleStates = new Vector<GameState>();
        state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
