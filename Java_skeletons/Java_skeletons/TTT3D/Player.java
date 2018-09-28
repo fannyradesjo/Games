@@ -149,7 +149,7 @@ public class Player {
      * @return the next state the board is in after our move
      */
     public GameState play(final GameState gameState, final Deadline deadline) {
-      int depth = 3;
+      int depth = 2;
         Vector<GameState> nextStates = new Vector<GameState>();
         gameState.findPossibleMoves(nextStates);
 
