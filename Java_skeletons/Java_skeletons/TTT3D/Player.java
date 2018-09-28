@@ -42,11 +42,10 @@ public class Player {
           if(col+lay == size){ diag_score[4*size+row] =  fixEval(diag_score[4*size+row], cell, player);}
           if(col==lay){ diag_score[5*size+row] =  fixEval(diag_score[5*size+row], cell, player);}
 
-          if(row == col && lay == col){ diag_score[6*size+1] =  fixEval(diag_score[6*size+1], cell, player);}
-          if(row == col && lay+row == size){ diag_score[6*size+2] =  fixEval(diag_score[6*size+2], cell, player);}
-          if(row+col == size && lay == row){ diag_score[6*size+3] =  fixEval(diag_score[6*size+3], cell, player);}
-          if(row+col == size && lay == col){ diag_score[6*size+4] =  fixEval(diag_score[6*size+4], cell, player);}
-
+          if(row == col && lay == col){ diag_score[6*size] =  fixEval(diag_score[6*size], cell, player);}
+          if(row == col && lay+row == size){ diag_score[6*size+1] =  fixEval(diag_score[6*size+1], cell, player);}
+          if(row+col == size && lay == row){ diag_score[6*size+2] =  fixEval(diag_score[6*size+2], cell, player);}
+          if(row+col == size && lay == col){ diag_score[6*size+3] =  fixEval(diag_score[6*size+3], cell, player);}
         }
       }
     }
@@ -106,36 +105,52 @@ public class Player {
        }
      }
 
-     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player){
+     public static int alphabeta(GameState state,int depth,int alpha,int beta,int player, Deadline deadline){
        int v;
+       int bestPossible;
+       GameState maxState = new GameState();
+
+       if(deadline.timeUntil() < 1000000000){
+         System.err.println("dedaline!!!!!!");
+         return 0;
+       }
 
        Vector<GameState> possibleStates = new Vector<GameState>();
        state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
 
        if(depth == 0 || possibleStates.size() == 0) {
-         v = evaluate(player, state);
+         bestPossible = evaluate(player, state);
        }
        else if(player == 1) {
-         v = -Integer.MAX_VALUE;
+         bestPossible = -Integer.MAX_VALUE;
          for(GameState s: possibleStates){
-           v = java.lang.Math.max(v, alphabeta(s,depth-1,alpha,beta,2));
+           v = alphabeta(s,depth-1,alpha,beta,2, deadline);
            alpha = java.lang.Math.max(alpha, v);
+           if(v > bestPossible){
+             bestPossible = v;
+             maxState  = s;
+           }
            if(beta <= alpha){
              break;
            }
          }
        }
        else {
-         v = Integer.MAX_VALUE;
+         bestPossible = Integer.MAX_VALUE;
          for(GameState s: possibleStates){
-           v = java.lang.Math.min(v, alphabeta(s, depth-1, alpha,beta,1));
+           v = alphabeta(s, depth-1, alpha,beta,1,deadline);
            beta = java.lang.Math.min(beta, v);
+           if (v < bestPossible) {
+            bestPossible = v;
+            maxState  = s;
+            }
            if(beta <= alpha){
              break;
            }
          }
        }
-       return v;
+       nextBestState = maxState;
+       return bestPossible;
      }
 
 
@@ -158,7 +173,7 @@ public class Player {
             return new GameState(gameState, new Move());
         }
 
-        int v = minmax(gameState, depth, 1);
+        int v = alphabeta(gameState, depth,-Integer.MAX_VALUE, Integer.MAX_VALUE, 1, deadline);
 
         /**
          * Here you should write your algorithms to get the best next move, i.e.
