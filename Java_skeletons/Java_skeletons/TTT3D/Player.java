@@ -24,7 +24,7 @@ public class Player {
     int size = state.BOARD_SIZE;
     int score_sum = 0;
     Integer[][] score = new Integer[size*size][3];
-    Integer[] diag_score = new Integer[size*6];
+    Integer[] diag_score = new Integer[size*6+4];
 
 
     for(int row = 0; row < size; row++){
@@ -36,10 +36,17 @@ public class Player {
           score[row*size+lay][2] = fixEval(score[row*size+lay][2], cell, player);
           if(row+col == size){ diag_score[lay] = fixEval(diag_score[lay], cell, player);}
           if(row == col){ diag_score[size+lay] = fixEval(diag_score[size+lay], cell, player);}
-          if(row+lay == size){ diag_score[2*size+col] = fixEval(diag_score[2*size+lay], cell, player);}
-          if(row == lay){ diag_score[3*size+col] = fixEval(diag_score[3*size+lay], cell, player);}
-          if(col+lay == size){ diag_score[4*size+row] =  fixEval(diag_score[4*size+lay], cell, player);}
-          if(col==lay){ diag_score[5*size+row] =  fixEval(diag_score[5*size+lay], cell, player);}
+
+          if(row+lay == size){ diag_score[2*size+col] = fixEval(diag_score[2*size+col], cell, player);}
+          if(row == lay){ diag_score[3*size+col] = fixEval(diag_score[3*size+col], cell, player);}
+          if(col+lay == size){ diag_score[4*size+row] =  fixEval(diag_score[4*size+row], cell, player);}
+          if(col==lay){ diag_score[5*size+row] =  fixEval(diag_score[5*size+row], cell, player);}
+
+          if(row == col && lay == col){ diag_score[6*size+1] =  fixEval(diag_score[6*size+1], cell, player);}
+          if(row == col && lay+row == size){ diag_score[6*size+2] =  fixEval(diag_score[6*size+2], cell, player);}
+          if(row+col == size && lay == row){ diag_score[6*size+3] =  fixEval(diag_score[6*size+3], cell, player);}
+          if(row+col == size && lay == col){ diag_score[6*size+4] =  fixEval(diag_score[6*size+4], cell, player);}
+
         }
       }
     }
