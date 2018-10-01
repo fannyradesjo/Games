@@ -27,3 +27,4 @@ mkfifo pipe
 java -cp folder1 Main init verbose < pipe | java -cp folder2 Main > pipe
 
 
+

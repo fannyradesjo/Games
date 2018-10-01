@@ -123,8 +123,8 @@ public class Player {
      gameState.findPossibleMoves(nextStates);
      int len = nextStates.size();
      //if(len < 40){depth = 6;}
-     if(len < 10){depth = 8;}
-     //if(len < 15){depth = 10;}*/
+     if(len < 12){depth = 9;}
+     if(len < 3){depth = 10;}
 
 
 
