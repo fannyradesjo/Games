@@ -13,36 +13,54 @@ public class Player {
     int mine = 0;
     int your = 0;
 
+    if(state.isEOG()){
+    if(state.isRedWin() && me == 1){ mine = 999999;}
+    else if(state.isRedWin()  && you == 1){your = 999999;}
+    else if(state.isWhiteWin() && me == 2){mine = 999999;}
+    else if(state.isWhiteWin() && you == 2){your = 999999;}
+    else  {your = 999;}
+  }
+  else{
     for(int pos = 0; pos <= 31; pos++){
         if(state.get(pos) == me){
           mine++;
         }
         else if(state.get(pos) == you){
-          your++;
+          your = your + 3;
         }
         else if(state.get(pos) == 4+me){
           mine = mine + 10;
         }
         else if(state.get(pos) == 4+you){
-          your = your+10;
+          your = your+30;
         }
       }
-
+    }
         return mine-your;
   }
+
+  public static Vector<GameState> order(Vector<GameState> nextStates){
+        Collections.sort(nextStates, new Comparator<GameState>() {
+            public int compare(GameState s1, GameState s2) {
+                return Integer.compare(evaluate(s1), evaluate(s2));
+            }
+        });
+        return nextStates;
+}
 
   public static int alphabeta(GameState state,int depth,int alpha,int beta,int player, Deadline deadline){
     int v;
     int bestPossible;
     GameState maxState = new GameState();
 
-    if(deadline.timeUntil() < 100000){
+    if(deadline.timeUntil() < 10000000){
       System.err.println("dedaline!!!!!!");
       return 0;
     }
 
     Vector<GameState> possibleStates = new Vector<GameState>();
     state.findPossibleMoves(possibleStates); //varför ej beroende av player????????????
+    possibleStates = order(possibleStates);
 
     if(depth == 0 || possibleStates.size() == 0) {
       bestPossible = evaluate(state);
@@ -68,7 +86,6 @@ public class Player {
       bestPossible = Integer.MAX_VALUE;
       for(GameState s: possibleStates){
         if(checked_states.contains(s) == false){
-        checked_states.add(s);
         checked_states.add(s);
         v = alphabeta(s, depth-1, alpha,beta,me,deadline);
         beta = java.lang.Math.min(beta, v);
@@ -99,13 +116,15 @@ public class Player {
    checked_states = new ArrayList<GameState>();
    depth = 7;
    me = gameState.getNextPlayer();
-   you = 3 -me;
+   you = 3 - me;
 
 
      Vector<GameState> nextStates = new Vector<GameState>();
      gameState.findPossibleMoves(nextStates);
      int len = nextStates.size();
-
+     //if(len < 40){depth = 6;}
+     if(len < 10){depth = 8;}
+     //if(len < 15){depth = 10;}*/
 
 
 
